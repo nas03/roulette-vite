@@ -31,7 +31,7 @@ const ClientPage: React.FC = () => {
 		const turn_left = data.turn_left;
 
 		if (turn_left == 0) {
-			const userData = JSON.parse(localStorage.getItem('userData') );
+			const userData = JSON.parse(localStorage.getItem('userData'));
 			if (userData == null || userData == undefined) {
 				setShowModal(true);
 			}
@@ -63,7 +63,7 @@ const ClientPage: React.FC = () => {
 				} else if (body.code == '400') {
 					setTurn(0);
 					alert('Bạn đã hết lượt chơi');
-					const userData = JSON.parse(localStorage.getItem('userData') );
+					const userData = JSON.parse(localStorage.getItem('userData'));
 					if (userData == null || userData == undefined || userData == '') {
 						setShowModal(true);
 					}
@@ -72,11 +72,11 @@ const ClientPage: React.FC = () => {
 		});
 	};
 	const handleStopSpin = async () => {
-		let userData: UserData = JSON.parse(localStorage.getItem('userData') );
+		let userData: UserData = JSON.parse(localStorage.getItem('userData'));
 		if (userData == null || userData == undefined) {
 			setShowModal(true);
 		}
-		userData = JSON.parse(localStorage.getItem('userData') );
+		userData = JSON.parse(localStorage.getItem('userData'));
 		if (prize != 'none') {
 			await fetch(`${BASE_URL}/admin/add_reward`, {
 				method: 'POST',
@@ -98,11 +98,12 @@ const ClientPage: React.FC = () => {
 	useEffect(() => {
 		changeWheelSize();
 		window.addEventListener('resize', changeWheelSize);
+		document.addEventListener('load', changeWheelSize);
 	}, []);
 	changeWheelSize();
 	useEffect(() => {
-		changeWheelSize();
 		getTurn();
+		changeWheelSize();
 	}, [turn]);
 	return (
 		<div className="">
