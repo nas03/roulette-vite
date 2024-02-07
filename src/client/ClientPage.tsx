@@ -101,8 +101,8 @@ const ClientPage: React.FC = () => {
 	}, []);
 	changeWheelSize();
 	useEffect(() => {
-		getTurn();
 		changeWheelSize();
+		getTurn();
 	}, [turn]);
 	return (
 		<div className="">
