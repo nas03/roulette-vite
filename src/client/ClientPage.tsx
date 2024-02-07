@@ -5,6 +5,7 @@ import UserInfoModal from './UserInfoModal';
 import { BASE_URL } from '@/lib/consts';
 import { getUserToken, randomPrizeNumber } from '@/lib/utils';
 import { UserData } from '@/lib/types';
+import changeWheelSize from '@/assets/js/script.ts';
 import { prizeData } from './wheelPrize';
 const ClientPage: React.FC = () => {
 	const [mustSpin, setMustSpin] = useState(false);
@@ -47,26 +48,26 @@ const ClientPage: React.FC = () => {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ secret_token: token }),
-			});
+			}).then(async (response) => {
+				const body = await response.json();
 
-			const body = await response.json();
-
-			if (body.code == '0') {
-				const { type_reward } = body.data;
-				const getPrizeNumber = randomPrizeNumber(type_reward);
-				setPrize(type_reward);
-				setPrizeNumber(getPrizeNumber);
-				setMustSpin(true);
-				setTurn(turn - 1);
-				return;
-			} else if (body.code == '400') {
-				setTurn(0);
-				alert('Bạn đã hết lượt chơi');
-				const userData = JSON.parse(localStorage.getItem('userData') ?? '');
-				if (userData == null || userData == undefined) {
-					setShowModal(true);
+				if (body.code == '0') {
+					const { type_reward } = body.data;
+					const getPrizeNumber = randomPrizeNumber(type_reward);
+					setPrize(type_reward);
+					setPrizeNumber(getPrizeNumber);
+					setMustSpin(true);
+					setTurn(turn - 1);
+					return;
+				} else if (body.code == '400') {
+					setTurn(0);
+					alert('Bạn đã hết lượt chơi');
+					const userData = JSON.parse(localStorage.getItem('userData') ?? '');
+					if (userData == null || userData == undefined || userData == '') {
+						setShowModal(true);
+					}
 				}
-			}
+			});
 		});
 	};
 	const handleStopSpin = async () => {
@@ -94,7 +95,13 @@ const ClientPage: React.FC = () => {
 		}
 	};
 	useEffect(() => {
+		changeWheelSize();
+		window.addEventListener('resize', changeWheelSize);
+	}, []);
+	changeWheelSize();
+	useEffect(() => {
 		getTurn();
+		changeWheelSize();
 	}, [turn]);
 	return (
 		<div className="">
