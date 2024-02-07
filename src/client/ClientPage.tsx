@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import '@/assets/js/script.js';
 import { Wheel } from 'react-custom-roulette';
