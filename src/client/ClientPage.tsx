@@ -101,13 +101,12 @@ const ClientPage: React.FC = () => {
 	changeWheelSize();
 	useEffect(() => {
 		getTurn();
-		changeWheelSize();
 	}, [turn]);
 	return (
 		<div className="">
 			<main className="l-main ">
 				<img
-					className="p-background h-full max-xl:h-screen w-auto object-cover"
+					className="p-background h-screen w-screen max-xl:h-screen object-cover"
 					src={'/assets/img/Item/BG.png'}
 					width={2260}
 					height={1607}
