@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-router';
 import AdminPage from './admin/AdminPage';
 import ClientPage from './client/ClientPage';
-const rootRoute = createRootRoute({});
+const rootRoute = createRootRoute();
 
 const clientRoute = createRoute({
 	getParentRoute: () => rootRoute,

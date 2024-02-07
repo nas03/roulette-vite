@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import DataTable from '@/components/DataTable';
 import { useEffect, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -17,7 +18,7 @@ import {
 import { User } from '@/lib/types';
 import { BASE_URL } from '@/lib/consts';
 
-const AdminPage = () => {
+const AdminPage: React.FC = () => {
 	const [users, setUsers] = useState<User[]>([]);
 
 	const fetchUsers = async () => {
