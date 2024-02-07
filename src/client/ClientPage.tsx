@@ -96,7 +96,6 @@ const ClientPage: React.FC = () => {
 		}
 	};
 	useEffect(() => {
-		changeWheelSize();
 		window.addEventListener('resize', changeWheelSize);
 	}, []);
 	changeWheelSize();
