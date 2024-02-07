@@ -1,11 +1,9 @@
-
 import { useEffect, useState } from 'react';
 import { BankList } from '@/lib/types';
 import { List, Modal } from 'antd';
 //ignore type error
 import vietqr from 'vietqr';
-import { getUserToken } from '@/lib/utils';
-import { BASE_URL } from '@/lib/consts';
+
 const VerifyModal = ({ open }: { open: boolean }) => {
 	const [showAccountInput, setShowAccountInput] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
@@ -15,27 +13,10 @@ const VerifyModal = ({ open }: { open: boolean }) => {
 	const [bankName, setBankName] = useState('');
 	const [bankAccount, setBankAccount] = useState('');
 	const [fullName, setFullName] = useState('');
-	const [user, setUser] = useState('');
+	
 	//TODO: Verify bank account
 	const saveUserInfo = async () => {
 		setConfirmLoading(true);
-		const token = await getUserToken();
-		setUser(token);
-		await fetch(`${BASE_URL}/admin/add_reward/m10k`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				banking_number: bankAccount,
-				bank: bankName,
-				name: fullName,
-				secret_token: user,
-			}),
-		});
-
-		// if (body.detail == null) {
-		// }
 
 		localStorage.setItem(
 			'userData',
@@ -86,7 +67,13 @@ const VerifyModal = ({ open }: { open: boolean }) => {
 					},
 				}}
 				onOk={saveUserInfo}
-				onCancel={() => setShowModal(false)}
+				onCancel={() => {
+					setShowModal(false);
+					const user = JSON.parse(localStorage.getItem('userData'));
+					if (user == null || user == undefined) {
+						setShowModal(true);
+					}
+				}}
 				className="w-fit">
 				<h1 className="text-2xl font-bold text-center mb-5">
 					Thông tin chuyển khoản

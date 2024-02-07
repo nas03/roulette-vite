@@ -41,35 +41,33 @@ const ClientPage: React.FC = () => {
 	};
 
 	const handleSpinClick = async () => {
-		await getTurn().then(async () => {
-			const token = await getUserToken();
-			const response = await fetch(`${BASE_URL}/user/random`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ secret_token: token }),
-			}).then(async (response) => {
-				const body = await response.json();
-
-				if (body.code == '0') {
-					const { type_reward } = body.data;
-					const getPrizeNumber = randomPrizeNumber(type_reward);
-					setPrize(type_reward);
-					setPrizeNumber(getPrizeNumber);
-					setMustSpin(true);
-					setTurn(turn - 1);
-					return;
-				} else if (body.code == '400') {
-					setTurn(0);
-					alert('Bạn đã hết lượt chơi');
-					const userData = JSON.parse(localStorage.getItem('userData'));
-					if (userData == null || userData == undefined || userData == '') {
-						setShowModal(true);
-					}
-				}
-			});
+		const token = await getUserToken();
+		const response = await fetch(`${BASE_URL}/user/random`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ secret_token: token }),
 		});
+		const body = await response.json();
+
+		if (body.code == '0') {
+			const { type_reward } = body.data;
+			const getPrizeNumber = randomPrizeNumber(type_reward);
+			setPrize(type_reward);
+			setPrizeNumber(getPrizeNumber);
+			setMustSpin(true);
+			setTurn(turn - 1);
+			return;
+		} else if (body.code == '400') {
+			setTurn(0);
+			alert('Bạn đã hết lượt chơi');
+			const userData = JSON.parse(localStorage.getItem('userData'));
+			console.log(userData);
+			if (userData == null || userData == undefined || userData == '') {
+				setShowModal(true);
+			}
+		}
 	};
 	const handleStopSpin = async () => {
 		let userData: UserData = JSON.parse(localStorage.getItem('userData'));
@@ -77,47 +75,55 @@ const ClientPage: React.FC = () => {
 			setShowModal(true);
 		}
 		userData = JSON.parse(localStorage.getItem('userData'));
-		if (prize != 'none') {
-			await fetch(`${BASE_URL}/admin/add_reward`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					banking_number: userData.banking_number,
-					bank: userData.bank,
-					name: userData.name,
-					secret_token: user,
-					type_reward: prize,
-				}),
-			}).then(() => {
-				setMustSpin(false);
-			});
+		if (userData == null || userData == undefined) {
+			setShowModal(true);
 		}
+
+		if (prize != 'none') {
+			try {
+				await fetch(`${BASE_URL}/admin/add_reward`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						banking_number: userData.banking_number,
+						bank: userData.bank,
+						name: userData.name,
+						secret_token: user,
+						type_reward: prize,
+					}),
+				});
+			} catch (error) {
+				console.log('No information provided');
+				setShowModal(true);
+			}
+		}
+		setMustSpin(false);
 	};
 	const handleDisableScroll = () => {
 		document.body.style.overflow = 'hidden'; // Disable scroll
 
 		setTimeout(() => {
 			document.body.style.overflow = 'auto'; // Enable scroll after 1 second
-		}, 2000);
+		}, 500);
 	};
-	handleDisableScroll();
 	useEffect(() => {
 		// Call handleDisableScroll wherever you want to disable scroll for 1 second
+		handleDisableScroll();
 		window.addEventListener('resize', changeWheelSize);
 	}, []);
-
 	window.scrollTo(0, 0);
 	changeWheelSize();
+
 	useEffect(() => {
 		getTurn();
 	}, [turn]);
 	return (
-		<div className="">
-			<main className="l-main">
+		<div className="scroll-smooth">
+			<main className="l-main w-screen">
 				<img
-					className="p-background h-full w-auto max-xl:h-screen  object-cover"
+					className="p-background h-full w-screen max-xl:h-screen  object-cover"
 					src={'/assets/img/Item/BG.png'}
 					width={2260}
 					height={1607}
