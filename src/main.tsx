@@ -19,7 +19,7 @@ const clientRoute = createRoute({
 
 const adminRoute = createRoute({
 	getParentRoute: () => rootRoute,
-	path: '/448a918',
+	path: '/admin-4481abc',
 	component: AdminPage,
 });
 
