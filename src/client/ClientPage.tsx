@@ -104,7 +104,7 @@ const ClientPage: React.FC = () => {
 	}, [turn]);
 	return (
 		<div className="">
-			<main className="l-main ">
+			<main className="l-main h-screen">
 				<img
 					className="p-background h-screen w-screen max-xl:h-screen object-cover"
 					src={'/assets/img/Item/BG.png'}
