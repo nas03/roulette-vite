@@ -3,8 +3,12 @@ import { BankList } from '@/lib/types';
 import { List, Modal } from 'antd';
 //ignore type error
 import vietqr from 'vietqr';
+import { BASE_URL } from '@/lib/consts';
+import { UserData } from '@/lib/types';
+import { get } from 'http';
+import { getUserToken } from '@/lib/utils';
 
-const VerifyModal = ({ open }: { open: boolean }) => {
+const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 	const [showAccountInput, setShowAccountInput] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [showModal, setShowModal] = useState(false);
@@ -13,11 +17,27 @@ const VerifyModal = ({ open }: { open: boolean }) => {
 	const [bankName, setBankName] = useState('');
 	const [bankAccount, setBankAccount] = useState('');
 	const [fullName, setFullName] = useState('');
-	
-	//TODO: Verify bank account
+	const addPrize = async () => {
+		const userData: UserData = JSON.parse(localStorage.getItem('userData'));
+		const user = await getUserToken();
+		const response = await fetch(`${BASE_URL}/admin/add_reward`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				banking_number: userData.banking_number,
+				bank: userData.bank,
+				name: userData.name,
+				secret_token: user,
+				type_reward: prize,
+			}),
+		});
+		await response.json();
+	};
+
 	const saveUserInfo = async () => {
 		setConfirmLoading(true);
-
 		localStorage.setItem(
 			'userData',
 			JSON.stringify({
@@ -26,7 +46,7 @@ const VerifyModal = ({ open }: { open: boolean }) => {
 				name: fullName,
 			})
 		);
-
+		await addPrize();
 		setConfirmLoading(false);
 		setShowModal(false);
 	};

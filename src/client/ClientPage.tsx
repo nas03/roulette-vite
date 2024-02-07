@@ -79,37 +79,32 @@ const ClientPage: React.FC = () => {
 			}
 		}
 	};
-	const handleStopSpin = async () => {
-		let userData: UserData = JSON.parse(localStorage.getItem('userData'));
-		if (userData == null || userData == undefined) {
-			setShowModal(true);
-		}
-		userData = JSON.parse(localStorage.getItem('userData'));
-		if (userData == null || userData == undefined) {
-			setShowModal(true);
-		}
 
-		if (prize != 'none') {
-			try {
-				await fetch(`${BASE_URL}/admin/add_reward`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						banking_number: userData.banking_number,
-						bank: userData.bank,
-						name: userData.name,
-						secret_token: user,
-						type_reward: prize,
-					}),
-				});
-			} catch (error) {
-				console.log('No information provided');
-				setShowModal(true);
-			}
-		}
+	const handleStopSpin = async () => {
 		setMustSpin(false);
+		const userData = localStorage.getItem('userData');
+
+		if (userData == null || userData == undefined || userData == '') {
+			setShowModal(true);
+		} else {
+			const userData: UserData = JSON.parse(localStorage.getItem('userData'));
+
+			const response = await fetch(`${BASE_URL}/admin/add_reward`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					banking_number: userData.banking_number,
+					bank: userData.bank,
+					name: userData.name,
+					secret_token: user,
+					type_reward: prize,
+				}),
+			});
+			await response.json();
+		}
+		setShowModal(true);
 	};
 	const handleDisableScroll = () => {
 		document.body.style.overflow = 'hidden'; // Disable scroll
@@ -205,7 +200,7 @@ const ClientPage: React.FC = () => {
 									alt="Quay 10 lần"
 								/>
 							</button>
-							<UserInfoModal open={showModal} />
+							<UserInfoModal open={showModal} prize={prize} />
 						</div>
 						<div className="p-wheel__turns absolute left-1/2 -translate-x-1/2 text-orange-500 text-xl max-md:text-lg max-sm:text-base">
 							Bạn đang có{' '}
