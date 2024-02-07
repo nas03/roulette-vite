@@ -3,7 +3,7 @@ import './style.css';
 const LoadingDragon = () => {
 	return (
 		<>
-			<div className="m-0 p-0 bg-[rgba(255,246,227,0.5)] flex flex-row items-center justify-items-center w-full h-full absolute z-[100]">
+			<div className="m-0 p-0 bg-[rgba(255,246,227,0.8)] flex flex-row items-center justify-items-center w-screen h-full absolute z-[100]">
 				<div className="main left-1/2 -translate-x-1/2">
 					<div className="shadow-wrapper ">
 						<div className="shadow"></div>
