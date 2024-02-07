@@ -95,18 +95,29 @@ const ClientPage: React.FC = () => {
 			});
 		}
 	};
+	const handleDisableScroll = () => {
+		document.body.style.overflow = 'hidden'; // Disable scroll
+
+		setTimeout(() => {
+			document.body.style.overflow = 'auto'; // Enable scroll after 1 second
+		}, 2000);
+	};
+	handleDisableScroll();
 	useEffect(() => {
+		// Call handleDisableScroll wherever you want to disable scroll for 1 second
 		window.addEventListener('resize', changeWheelSize);
 	}, []);
+
+	window.scrollTo(0, 0);
 	changeWheelSize();
 	useEffect(() => {
 		getTurn();
 	}, [turn]);
 	return (
 		<div className="">
-			<main className="l-main h-screen">
+			<main className="l-main">
 				<img
-					className="p-background h-screen w-screen max-xl:h-screen object-cover"
+					className="p-background h-full w-screen  object-cover"
 					src={'/assets/img/Item/BG.png'}
 					width={2260}
 					height={1607}
@@ -119,7 +130,7 @@ const ClientPage: React.FC = () => {
 							data-media="sp">
 							<img
 								id=""
-								className="p-wheel__background mr-auto ml-auto z-10 absolute top-[10vh] left-1/2 -translate-x-1/2 max-sm:w-full max-md:w-full max-lg:w-[60%] w-1/3 h-auto"
+								className="p-wheel__background mr-auto ml-auto z-10 absolute top-[8vh] left-1/2 -translate-x-1/2 max-sm:w-[70%] max-[500px]:w-full max-md:w-full max-lg:w-[60%] w-1/3 h-auto"
 								width={1000}
 								height={1000}
 								src="/assets/img/Item/wheel.png"
