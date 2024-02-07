@@ -69,6 +69,9 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
+			screens: {
+				"sc-1025": '1025px'
+			}
 		},
 	},
 	plugins: [import('tailwindcss-animate')],

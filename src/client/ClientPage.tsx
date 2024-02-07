@@ -117,7 +117,7 @@ const ClientPage: React.FC = () => {
 		<div className="">
 			<main className="l-main">
 				<img
-					className="p-background h-full w-screen  object-cover"
+					className="p-background h-full w-auto max-xl:h-screen  object-cover"
 					src={'/assets/img/Item/BG.png'}
 					width={2260}
 					height={1607}
@@ -130,7 +130,7 @@ const ClientPage: React.FC = () => {
 							data-media="sp">
 							<img
 								id=""
-								className="p-wheel__background mr-auto ml-auto z-10 absolute top-[8vh] left-1/2 -translate-x-1/2 max-sm:w-[70%] max-[500px]:w-full max-md:w-full max-lg:w-[60%] w-1/3 h-auto"
+								className="p-wheel__background mr-auto ml-auto z-10 absolute top-[8vh] left-1/2 -translate-x-1/2 max-md:w-[60%] max-[500px]:w-full w-1/3 h-auto"
 								width={1000}
 								height={1000}
 								src="/assets/img/Item/wheel.png"
