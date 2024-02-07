@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import '@/assets/js/script.js';
 import { Wheel } from 'react-custom-roulette';
 import UserInfoModal from './UserInfoModal';
@@ -8,6 +8,7 @@ import { getUserToken, randomPrizeNumber } from '@/lib/utils';
 import { UserData } from '@/lib/types';
 import changeWheelSize from '@/assets/js/script.ts';
 import { prizeData } from './wheelPrize';
+import LoadingDragon from '@/components/LoadingDragon/LoadingDragon';
 const ClientPage: React.FC = () => {
 	const [mustSpin, setMustSpin] = useState(false);
 	const [showModal, setShowModal] = useState(false);
@@ -15,6 +16,7 @@ const ClientPage: React.FC = () => {
 	const [prizeNumber, setPrizeNumber] = useState<number>(0);
 	const [user, setUser] = useState('');
 	const [prize, setPrize] = useState('');
+	const [loading, setLoading] = useState(false);
 	const getTurn = async () => {
 		const token = await getUserToken();
 		setUser(token);
@@ -41,6 +43,7 @@ const ClientPage: React.FC = () => {
 	};
 
 	const handleSpinClick = async () => {
+		setLoading(true);
 		const token = await getUserToken();
 		const response = await fetch(`${BASE_URL}/user/random`, {
 			method: 'POST',
@@ -56,10 +59,12 @@ const ClientPage: React.FC = () => {
 			const getPrizeNumber = randomPrizeNumber(type_reward);
 			setPrize(type_reward);
 			setPrizeNumber(getPrizeNumber);
-			setMustSpin(true);
+			setLoading(false);
 			setTurn(turn - 1);
+			setMustSpin(true);
 			return;
 		} else if (body.code == '400') {
+			setLoading(false);
 			setTurn(0);
 			alert('Bạn đã hết lượt chơi');
 			const userData = JSON.parse(localStorage.getItem('userData'));
@@ -121,6 +126,7 @@ const ClientPage: React.FC = () => {
 	}, [turn]);
 	return (
 		<div className="scroll-smooth">
+			{loading && <LoadingDragon />}
 			<main className="l-main w-screen">
 				<img
 					className="p-background h-full w-screen max-xl:h-screen  object-cover"
