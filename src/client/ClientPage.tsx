@@ -119,7 +119,7 @@ const ClientPage: React.FC = () => {
 							data-media="sp">
 							<img
 								id=""
-								className="p-wheel__background mr-auto ml-auto z-10 absolute top-[10vh] left-1/2 -translate-x-1/2 max-sm:w-full max-md:w-1/2 w-1/3 h-auto"
+								className="p-wheel__background mr-auto ml-auto z-10 absolute top-[10vh] left-1/2 -translate-x-1/2 max-sm:w-full max-md:w-full max-lg:w-[60%] w-1/3 h-auto"
 								width={1000}
 								height={1000}
 								src="/assets/img/Item/wheel.png"
@@ -163,7 +163,7 @@ const ClientPage: React.FC = () => {
 						</button>
 						<UserInfoModal open={showModal} />
 					</div>
-					<div className="p-wheel__turns absolute left-1/2 -translate-x-1/2 text-orange-500 text-xl">
+					<div className="p-wheel__turns absolute left-1/2 -translate-x-1/2 text-orange-500 text-xl max-md:text-lg max-sm:text-base">
 						Bạn đang có{' '}
 						<span className="" id="turn">
 							{turn}
