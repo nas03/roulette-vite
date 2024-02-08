@@ -16,7 +16,7 @@ import {
 import { ChevronDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-
+import { Input } from '@/components/ui/input';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -80,14 +80,16 @@ export default function DataTable({
 	return (
 		<div className={`w-${width} ml-auto mr-auto`}>
 			<div className="flex items-center py-4">
-				{/* <Input
-					placeholder="Filter emails..."
-					value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+				<Input
+					placeholder="Filter reward type..."
+					value={
+						(table.getColumn('reward_type')?.getFilterValue() as string) ?? ''
+					}
 					onChange={(event) =>
-						table.getColumn('email')?.setFilterValue(event.target.value)
+						table.getColumn('reward_type')?.setFilterValue(event.target.value)
 					}
 					className="max-w-sm"
-				/> */}
+				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="outline" className="ml-auto">
