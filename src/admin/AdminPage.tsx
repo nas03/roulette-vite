@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-
+import { Modal } from 'antd';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -20,7 +20,8 @@ import { BASE_URL } from '@/lib/consts';
 
 const AdminPage: React.FC = () => {
 	const [users, setUsers] = useState<User[]>([]);
-
+	const [showModal, setShowModal] = useState(false);
+	const [loading, setLoading] = useState(false)
 	const fetchUsers = async () => {
 		const response = await fetch(`${BASE_URL}/admin/reward/get-all-reward`);
 		const body = await response.json();
@@ -38,6 +39,7 @@ const AdminPage: React.FC = () => {
 		await fetchUsers();
 	};
 	const deleteUser = async (secret_token: string) => {
+		setLoading(true)
 		try {
 			await fetch(`${BASE_URL}/admin/delete/${secret_token}`, {
 				method: 'GET',
@@ -48,7 +50,9 @@ const AdminPage: React.FC = () => {
 			await fetchUsers();
 		} catch (error) {
 			console.log('Error deleting user', error);
+			
 		}
+		setLoading(false)
 	};
 	useEffect(() => {
 		fetchUsers();
@@ -163,31 +167,48 @@ const AdminPage: React.FC = () => {
 				const item = row.original;
 
 				return (
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" className="h-8 w-8 p-0">
-								<span className="sr-only">Open menu</span>
-								<MoreHorizontal className="h-4 w-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Actions</DropdownMenuLabel>
-							<DropdownMenuItem
-								onClick={() => {
-									navigator.clipboard.writeText(String(item.secret_token));
-								}}>
-								Copy User ID
-							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem onClick={() => updateTransferStatus(item._id)}>
-								Update Money Transferred Status
-							</DropdownMenuItem>
+					<>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button variant="ghost" className="h-8 w-8 p-0">
+									<span className="sr-only">Open menu</span>
+									<MoreHorizontal className="h-4 w-4" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end">
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuItem
+									onClick={() => {
+										navigator.clipboard.writeText(String(item.secret_token));
+									}}>
+									Copy User Secret Token
+								</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem
+									onClick={() => updateTransferStatus(item._id)}>
+									Update Money Transferred Status
+								</DropdownMenuItem>
 
-							<DropdownMenuItem onClick={() => deleteUser(item.secret_token)}>
-								Delete User
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
+								<DropdownMenuItem
+									onClick={() => {
+										setShowModal(true);
+									}}>
+									Delete User Reward Records
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+						<Modal
+							open={showModal}
+							confirmLoading={loading}
+							onOk={() => deleteUser(item.secret_token)}
+							onCancel={() => setShowModal(false)}
+							okButtonProps={{ style: { background: 'rgb(59 130 246)' } }}>
+							Bạn sẽ xóa toàn bộ phần thưởng của người chơi có tên {item.name}{' '}
+							<br />
+							và đặt lại số lượt chơi của họ về 3 lượt. <br />
+							Are you sure about that?
+						</Modal>
+					</>
 				);
 			},
 		},
