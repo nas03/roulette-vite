@@ -128,7 +128,12 @@ const ClientPage: React.FC = () => {
 			<div className="scroll-smooth h-full">
 				{loading && <LoadingDragon />}
 				<main className="l-main w-screen">
-					<img src={'/assets/svg/fun_bug.svg'} width={64} height={64} className='absolute left-[5rem] top-[5rem] max-md:top-[1rem] max-md:left-[2rem] '/>
+					<img
+						src={'/assets/svg/fun_bug.svg'}
+						width={64}
+						height={64}
+						className="absolute left-[5rem] top-[5rem] max-md:top-[1rem] max-md:left-[2rem] "
+					/>
 					<img
 						className="p-background h-full w-screen max-xl:h-screen  object-cover"
 						src={'/assets/img/Item/BG.png'}
@@ -180,25 +185,17 @@ const ClientPage: React.FC = () => {
 							</div>
 						</div>
 
-						<div className="p-wheel__buttons flex flex-row gap-5 w-fit absolute pt-5 left-1/2 -translate-x-1/2">
+						<div className="p-wheel__buttons flex flex-row w-fit absolute pt-5 left-1/2 -translate-x-1/2">
 							<button className="p-wheel__button" onClick={handleSpinClick}>
 								<img
-									className="max-sm:w-[10rem] max-w-[15rem]"
+									className="max-sm:w-[12rem] max-w-[15rem]"
 									width={305}
 									height={151}
 									src="/assets/img/Item/button_1.svg"
 									alt="Quay 1 lần"
 								/>
 							</button>
-							<button className="p-wheel__button">
-								<img
-									className="max-sm:w-[10rem] max-w-[15rem]"
-									width={305}
-									height={151}
-									src="/assets/img/Item/button_10.svg"
-									alt="Quay 10 lần"
-								/>
-							</button>
+
 							<UserInfoModal open={showModal} prize={prize} />
 						</div>
 						<div className="p-wheel__turns absolute left-1/2 -translate-x-1/2 text-orange-500 text-xl max-md:text-lg max-sm:text-base">
