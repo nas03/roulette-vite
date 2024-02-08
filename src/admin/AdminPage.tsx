@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import DataTable from '@/components/DataTable';
+import DataTable from './DataTable';
 import { useEffect, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
@@ -34,39 +34,26 @@ const AdminPage: React.FC = () => {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-		}).then(() => {
-			console.log('updated');
 		});
 		await fetchUsers();
+	};
+	const deleteUser = async (secret_token: string) => {
+		try {
+			await fetch(`${BASE_URL}/admin/delete/${secret_token}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+			await fetchUsers();
+		} catch (error) {
+			console.log('Error deleting user', error);
+		}
 	};
 	useEffect(() => {
 		fetchUsers();
 	}, []);
 	const columns: ColumnDef<User>[] = [
-		{
-			id: 'select',
-			accessorKey: '_id',
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						(table.getIsAllPageRowsSelected() ||
-							(table.getIsSomePageRowsSelected() && 'indeterminate')) as boolean
-					}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				/* row value */
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
 		{
 			accessorKey: 'name',
 			header: ({ column }) => {
@@ -196,7 +183,9 @@ const AdminPage: React.FC = () => {
 								Update Money Transferred Status
 							</DropdownMenuItem>
 
-							<DropdownMenuItem>Delete User</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => deleteUser(item.secret_token)}>
+								Delete User
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				);

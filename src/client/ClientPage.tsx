@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import '@/assets/js/script.js';
 import { Wheel } from 'react-custom-roulette';
 import UserInfoModal from './components/UserInfoModal';
 import { BASE_URL } from '@/lib/consts';
-import { getUserToken, randomPrizeNumber } from '@/lib/utils';
+import { getUserToken, randomPrizeNumber, validateUserData } from '@/lib/utils';
 import { UserData } from '@/lib/types';
 import changeWheelSize from '@/assets/js/script.ts';
 import { prizeData } from './wheelPrize';
@@ -35,8 +35,8 @@ const ClientPage: React.FC = () => {
 		const turn_left = data.turn_left;
 
 		if (turn_left == 0) {
-			const userData = JSON.parse(localStorage.getItem('userData'));
-			if (userData == null || userData == undefined) {
+			const validate = validateUserData();
+			if (!validate) {
 				setShowModal(true);
 			}
 		}
@@ -70,11 +70,9 @@ const ClientPage: React.FC = () => {
 		} else if (body.code == '400') {
 			setLoading(false);
 			setTurn(0);
-
 			setShowPopup(true);
-			const userData = JSON.parse(localStorage.getItem('userData'));
-			console.log(userData);
-			if (userData == null || userData == undefined || userData == '') {
+			const validate = validateUserData();
+			if (!validate) {
 				setShowModal(true);
 			}
 		}
@@ -82,44 +80,44 @@ const ClientPage: React.FC = () => {
 
 	const handleStopSpin = async () => {
 		setMustSpin(false);
-		const userData = localStorage.getItem('userData');
-
-		if (userData == null || userData == undefined || userData == '') {
-			setShowModal(true);
-		} else {
-			const userData: UserData = JSON.parse(localStorage.getItem('userData'));
-
-			const response = await fetch(`${BASE_URL}/admin/add_reward`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					banking_number: userData.banking_number,
-					bank: userData.bank,
-					name: userData.name,
-					secret_token: user,
-					type_reward: prize,
-				}),
-			});
-			await response.json();
+		if (prize != 'none') {
+			const validate = validateUserData();
+			if (!validate) {
+				setShowModal(true);
+			} else {
+				const userData: UserData = JSON.parse(
+					localStorage.getItem('userData') as string
+				);
+				const response = await fetch(`${BASE_URL}/admin/add_reward`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						banking_number: userData.banking_number,
+						bank: userData.bank,
+						name: userData.name,
+						secret_token: user,
+						type_reward: prize,
+					}),
+				});
+				await response.json();
+			}
 		}
-		setShowModal(true);
 	};
 	const handleDisableScroll = () => {
-		document.body.style.overflow = 'hidden'; // Disable scroll
-
+		document.body.style.overflow = 'hidden';
 		setTimeout(() => {
-			document.body.style.overflow = 'auto'; // Enable scroll after 1 second
+			document.body.style.overflow = 'auto';
 		}, 500);
 	};
+	window.scrollTo(0, 0);
+	changeWheelSize();
+
 	useEffect(() => {
-		// Call handleDisableScroll wherever you want to disable scroll for 1 second
 		handleDisableScroll();
 		window.addEventListener('resize', changeWheelSize);
 	}, []);
-	window.scrollTo(0, 0);
-	changeWheelSize();
 
 	useEffect(() => {
 		getTurn();
@@ -130,6 +128,7 @@ const ClientPage: React.FC = () => {
 			<div className="scroll-smooth h-full">
 				{loading && <LoadingDragon />}
 				<main className="l-main w-screen">
+					<img src={'/assets/svg/fun_bug.svg'} width={64} height={64} className='absolute left-[5rem] top-[5rem] max-md:top-[1rem] max-md:left-[2rem] '/>
 					<img
 						className="p-background h-full w-screen max-xl:h-screen  object-cover"
 						src={'/assets/img/Item/BG.png'}
@@ -158,7 +157,7 @@ const ClientPage: React.FC = () => {
 								data-media="sp">
 								<img
 									id=""
-									className="p-wheel__background mr-auto ml-auto z-10 absolute top-[8vh] left-1/2 -translate-x-1/2 max-md:w-[60%] max-[500px]:w-full w-1/3 h-auto"
+									className="p-wheel__background mr-auto ml-auto z-10 absolute top-[8vh] left-1/2 -translate-x-1/2 max-md:w-[60%] max-[500px]:w-[95%] w-1/3 h-auto"
 									width={1000}
 									height={1000}
 									src="/assets/img/Item/wheel.png"

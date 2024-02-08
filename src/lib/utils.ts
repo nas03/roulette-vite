@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 import crypto from 'crypto-js';
+import { UserData } from './types';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -16,7 +17,16 @@ export const getUserToken = async () => {
 
 	return hashSHA256(data.ip);
 };
-
+export function validateUserData() {
+	const userData = localStorage.getItem('userData');
+	if (!userData) return false;
+	const jsonUserData: UserData = JSON.parse(userData);
+	if (jsonUserData.bank == '' || jsonUserData.bank == null) return false;
+	if (jsonUserData.banking_number == '' || jsonUserData.banking_number == null)
+		return false;
+	if (jsonUserData.name == '' || jsonUserData.name == null) return false;
+	return true;
+}
 export function randomPrizeNumber(prize: string) {
 	const m10k = [6];
 	const m1k = [1, 3, 8, 11];

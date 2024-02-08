@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { BankList } from '@/lib/types';
 import { List, Modal } from 'antd';
-//ignore type error
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import vietqr from 'vietqr';
 import { BASE_URL } from '@/lib/consts';
 import { UserData } from '@/lib/types';
-import { get } from 'http';
-import { getUserToken } from '@/lib/utils';
+
+import { getUserToken, validateUserData } from '@/lib/utils';
 
 const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 	const [showAccountInput, setShowAccountInput] = useState(false);
@@ -18,7 +20,9 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 	const [bankAccount, setBankAccount] = useState('');
 	const [fullName, setFullName] = useState('');
 	const addPrize = async () => {
-		const userData: UserData = JSON.parse(localStorage.getItem('userData'));
+		const userData: UserData = JSON.parse(
+			localStorage.getItem('userData') as string
+		);
 		const user = await getUserToken();
 		const response = await fetch(`${BASE_URL}/admin/add_reward`, {
 			method: 'POST',
@@ -46,9 +50,11 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 				name: fullName,
 			})
 		);
-		await addPrize();
-		setConfirmLoading(false);
-		setShowModal(false);
+		if (validateUserData()) {
+			await addPrize();
+			setConfirmLoading(false);
+			setShowModal(false);
+		}
 	};
 
 	const getBankList = async () => {
@@ -88,10 +94,9 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 				}}
 				onOk={saveUserInfo}
 				onCancel={() => {
-					setShowModal(false);
-					const user = JSON.parse(localStorage.getItem('userData'));
-					if (user == null || user == undefined) {
-						setShowModal(true);
+					const validate = validateUserData();
+					if (validate) {
+						setShowModal(false);
 					}
 				}}
 				className="w-fit">
