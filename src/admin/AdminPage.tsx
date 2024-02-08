@@ -53,6 +53,7 @@ const AdminPage: React.FC = () => {
 			
 		}
 		setLoading(false)
+		setShowModal(false)
 	};
 	useEffect(() => {
 		fetchUsers();
