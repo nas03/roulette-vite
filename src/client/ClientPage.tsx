@@ -125,7 +125,7 @@ const ClientPage: React.FC = () => {
 
 	return (
 		<>
-			<div className="scroll-smooth h-full">
+			<div className="scroll-smooth h-full w-screen">
 				{loading && <LoadingDragon />}
 				<main className="l-main w-screen">
 					<img
