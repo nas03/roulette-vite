@@ -19,25 +19,31 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 	const [bankName, setBankName] = useState('');
 	const [bankAccount, setBankAccount] = useState('');
 	const [fullName, setFullName] = useState('');
+	const [showPopup, setShowPopup] = useState(false);
+	const [prizeFallBack, setPrizeFallBack] = useState('');
 	const addPrize = async () => {
 		const userData: UserData = JSON.parse(
 			localStorage.getItem('userData') as string
 		);
 		const user = await getUserToken();
-		const response = await fetch(`${BASE_URL}/admin/add_reward`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				banking_number: userData.banking_number,
-				bank: userData.bank,
-				name: userData.name,
-				secret_token: user,
-				type_reward: prize,
-			}),
-		});
-		await response.json();
+		if (prize == '') prize = prizeFallBack;
+		if (prize != 'none') {
+			const response = await fetch(`${BASE_URL}/admin/add_reward`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					banking_number: userData.banking_number,
+					bank: userData.bank,
+					name: userData.name,
+					secret_token: user,
+					type_reward: prize,
+				}),
+			});
+			await response.json();
+		}
+		setPrizeFallBack('');
 	};
 
 	const saveUserInfo = async () => {
@@ -54,6 +60,10 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 			await addPrize();
 			setConfirmLoading(false);
 			setShowModal(false);
+		} else {
+			setConfirmLoading(false);
+			setPrizeFallBack(prize);
+			setShowPopup(true);
 		}
 	};
 
@@ -77,6 +87,9 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 		open && getBankList();
 		setShowModal(open);
 	}, [open]);
+	useEffect(() => {
+		setPrizeFallBack(prize);
+	}, [prize]);
 	return (
 		<>
 			<Modal
@@ -97,6 +110,8 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 					const validate = validateUserData();
 					if (validate) {
 						setShowModal(false);
+					} else {
+						setShowPopup(true);
 					}
 				}}
 				className="w-fit">
@@ -187,6 +202,17 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 						</div>
 					)}
 				</form>
+			</Modal>
+			<Modal
+				open={showPopup}
+				onCancel={() => setShowPopup(false)}
+				okButtonProps={{
+					style: {
+						backgroundColor: '#F9A52B',
+					},
+				}}
+				onOk={() => setShowPopup(false)}>
+				Hãy nhập thông tin để chúng tôi chuyển quà cho bạn
 			</Modal>
 		</>
 	);

@@ -19,6 +19,7 @@ const ClientPage: React.FC = () => {
 	const [prize, setPrize] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [showPopup, setShowPopup] = useState(false);
+	const [disableSpin, setDisableSpin] = useState(false);
 	const getTurn = async () => {
 		const token = await getUserToken();
 		setUser(token);
@@ -59,12 +60,14 @@ const ClientPage: React.FC = () => {
 
 		if (body.code == '0') {
 			const { type_reward } = body.data;
+
 			const getPrizeNumber = randomPrizeNumber(type_reward);
 			setPrize(type_reward);
 			setPrizeNumber(getPrizeNumber);
 			setLoading(false);
 			document.body.style.overflow = 'auto';
 			setTurn(turn - 1);
+			setDisableSpin(true);
 			setMustSpin(true);
 			return;
 		} else if (body.code == '400') {
@@ -80,6 +83,7 @@ const ClientPage: React.FC = () => {
 
 	const handleStopSpin = async () => {
 		setMustSpin(false);
+		setDisableSpin(false);
 		if (prize != 'none') {
 			const validate = validateUserData();
 			if (!validate) {
@@ -186,7 +190,13 @@ const ClientPage: React.FC = () => {
 						</div>
 
 						<div className="p-wheel__buttons flex flex-row w-fit absolute pt-5 left-1/2 -translate-x-1/2">
-							<button className="p-wheel__button" onClick={handleSpinClick}>
+							<button
+								className="p-wheel__button"
+								onClick={() => {
+									if (disableSpin == false) {
+										handleSpinClick();
+									}
+								}}>
 								<img
 									className="max-sm:w-[12rem] max-w-[15rem]"
 									width={305}
