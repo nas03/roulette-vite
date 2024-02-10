@@ -35,12 +35,6 @@ const ClientPage: React.FC = () => {
 
 		const turn_left = data.turn_left;
 
-		if (turn_left == 0) {
-			const validate = validateUserData();
-			if (!validate) {
-				setShowModal(true);
-			}
-		}
 		setTurn(turn_left);
 		return turn_left;
 	};
@@ -84,6 +78,7 @@ const ClientPage: React.FC = () => {
 	const handleStopSpin = async () => {
 		setMustSpin(false);
 		setDisableSpin(false);
+		setInterval(() => {}, 2000);
 		if (prize != 'none') {
 			const validate = validateUserData();
 			if (!validate) {
@@ -120,6 +115,7 @@ const ClientPage: React.FC = () => {
 
 	useEffect(() => {
 		handleDisableScroll();
+
 		window.addEventListener('resize', changeWheelSize);
 	}, []);
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { BankList } from '@/lib/types';
 import { List, Modal } from 'antd';
+import { useToast } from '@/components/ui/use-toast';
+import { Toaster } from '@/components/ui/toaster';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -19,8 +21,10 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 	const [bankName, setBankName] = useState('');
 	const [bankAccount, setBankAccount] = useState('');
 	const [fullName, setFullName] = useState('');
-	const [showPopup, setShowPopup] = useState(false);
+	// const [showPopup, setShowPopup] = useState(false);
 	const [prizeFallBack, setPrizeFallBack] = useState('');
+	const { toast } = useToast();
+
 	const addPrize = async () => {
 		const userData: UserData = JSON.parse(
 			localStorage.getItem('userData') as string
@@ -63,7 +67,9 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 		} else {
 			setConfirmLoading(false);
 			setPrizeFallBack(prize);
-			setShowPopup(true);
+			toast({
+				title: 'Hãy điền thông tin để chúng mình chuyển quà bạn nhé 😍',
+			});
 		}
 	};
 
@@ -111,7 +117,9 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 					if (validate) {
 						setShowModal(false);
 					} else {
-						setShowPopup(true);
+						toast({
+							title: 'Hãy điền thông tin để chúng mình chuyển quà bạn nhé 😍',
+						});
 					}
 				}}
 				className="w-fit">
@@ -202,8 +210,9 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 						</div>
 					)}
 				</form>
+				<Toaster />
 			</Modal>
-			<Modal
+			{/* <Modal
 				open={showPopup}
 				onCancel={() => setShowPopup(false)}
 				okButtonProps={{
@@ -213,7 +222,7 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 				}}
 				onOk={() => setShowPopup(false)}>
 				Hãy nhập thông tin để chúng tôi chuyển quà cho bạn
-			</Modal>
+			</Modal> */}
 		</>
 	);
 };

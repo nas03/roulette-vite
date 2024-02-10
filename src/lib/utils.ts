@@ -20,6 +20,7 @@ export const getUserToken = async () => {
 export function validateUserData() {
 	const userData = localStorage.getItem('userData');
 	if (!userData) return false;
+
 	const jsonUserData: UserData = JSON.parse(userData);
 	if (jsonUserData.bank == '' || jsonUserData.bank == null) return false;
 	if (jsonUserData.banking_number == '' || jsonUserData.banking_number == null)

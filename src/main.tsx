@@ -7,6 +7,7 @@ import {
 	createRoute,
 	createRootRoute,
 } from '@tanstack/react-router';
+
 import AdminPage from './admin/AdminPage';
 import ClientPage from './client/ClientPage';
 const rootRoute = createRootRoute();
@@ -39,6 +40,7 @@ if (!rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<RouterProvider router={router} />
+			
 		</StrictMode>
 	);
 }
