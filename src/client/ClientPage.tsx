@@ -68,10 +68,10 @@ const ClientPage: React.FC = () => {
 			setLoading(false);
 			setTurn(0);
 			setShowPopup(true);
-			const validate = validateUserData();
-			if (!validate) {
-				setShowModal(true);
-			}
+			// const validate = validateUserData();
+			// if (!validate) {
+			// 	setShowModal(true);
+			// }
 		}
 	};
 
