@@ -12,7 +12,7 @@ import LoadingDragon from '@/components/LoadingDragon/LoadingDragon';
 import { Modal } from 'antd';
 const ClientPage: React.FC = () => {
 	const [mustSpin, setMustSpin] = useState(false);
-	const [showModal, setShowModal] = useState(true);
+	const [showModal, setShowModal] = useState(false);
 	const [turn, setTurn] = useState<number>(0);
 	const [prizeNumber, setPrizeNumber] = useState<number>(0);
 	const [user, setUser] = useState('');
