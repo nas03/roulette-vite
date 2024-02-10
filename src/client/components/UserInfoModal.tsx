@@ -152,7 +152,7 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 								onChange={(e) => {
 									setBankName(e.target.value);
 									const newFilteredBankList = bankList.filter((bank) =>
-										bank.code.includes(e.target.value)
+										bank.shortName.includes(e.target.value)
 									);
 									setFilteredBankList(newFilteredBankList);
 								}}
@@ -181,10 +181,10 @@ const VerifyModal = ({ open, prize }: { open: boolean; prize: string }) => {
 											<p
 												className="hover:text-blue-500 cursor-pointer"
 												onClick={() => {
-													setBankName(bank.code);
+													setBankName(bank.shortName);
 													setShowAccountInput(true);
 												}}>
-												{bank.code}
+												{bank.shortName}
 											</p>
 										}
 										description={bank.name}
