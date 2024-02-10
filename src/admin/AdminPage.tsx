@@ -5,6 +5,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Toast } from '@/components/ui/toast';
+import { toast, useToast } from '@/components/ui/use-toast';
 import { Modal } from 'antd';
 import {
 	DropdownMenu,
@@ -17,11 +19,13 @@ import {
 
 import { User } from '@/lib/types';
 import { BASE_URL } from '@/lib/consts';
+import { title } from 'process';
 
 const AdminPage: React.FC = () => {
 	const [users, setUsers] = useState<User[]>([]);
 	const [showModal, setShowModal] = useState(false);
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(false);
+	const { toast } = useToast();
 	const fetchUsers = async () => {
 		const response = await fetch(`${BASE_URL}/admin/reward/get-all-reward`);
 		const body = await response.json();
@@ -39,21 +43,23 @@ const AdminPage: React.FC = () => {
 		await fetchUsers();
 	};
 	const deleteUser = async (secret_token: string) => {
-		setLoading(true)
-		try {
-			await fetch(`${BASE_URL}/admin/delete/${secret_token}`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-			await fetchUsers();
-		} catch (error) {
-			console.log('Error deleting user', error);
-			
-		}
-		setLoading(false)
-		setShowModal(false)
+		setLoading(true);
+		// try {
+		// 	await fetch(`${BASE_URL}/admin/delete/${secret_token}`, {
+		// 		method: 'GET',
+		// 		headers: {
+		// 			'Content-Type': 'application/json',
+		// 		},
+		// 	});
+		// 	await fetchUsers();
+		// } catch (error) {
+		// 	console.log('Error deleting user', error);
+		// }
+		toast({
+			title: '? Bro',
+		});
+		setLoading(false);
+		setShowModal(false);
 	};
 	useEffect(() => {
 		fetchUsers();
@@ -192,7 +198,9 @@ const AdminPage: React.FC = () => {
 
 								<DropdownMenuItem
 									onClick={() => {
-										setShowModal(true);
+										toast({
+											title: '???? Bro',
+										});
 									}}>
 									Delete User Reward Records
 								</DropdownMenuItem>
@@ -222,6 +230,7 @@ const AdminPage: React.FC = () => {
 				<div className="flex flex-row  items-center justify-center gap-5  w-fit mr-auto ml-auto"></div>
 				{/* <UpdatePostModal/> */}
 				<DataTable width={'[90%]'} data={users} columns={columns} />
+				<Toast />
 			</div>
 		</>
 	);
